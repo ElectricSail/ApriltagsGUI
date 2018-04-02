@@ -9,15 +9,7 @@
 #include <vector>
 #include <iomanip>
 
-//for csv file:
-#include <QList>
-#include <QStringList>
-#include <QDir>
-#include <QDebug>
-
 std::ofstream optimizedData;
-//#include "qtcsv/stringdata.h"
-//#include "qtcsv/reader.h"
 
 using namespace cv;
 
@@ -371,13 +363,6 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
 
     ui->label->resize(ui->label->pixmap()->size());
 
-    //char *intStr = itoa(i);
-
-//    std::string s = std::to_string(i);
-//    ui->updateText->setText(QString::fromStdString(s));
-//    //TagOptimization t(i);
-//    cout << i << endl;
-//    i++;
   }
 
 }
@@ -458,13 +443,6 @@ void MainWindow::update_window2()
 
     ui->label->resize(ui->label->pixmap()->size());
 
-    //char *intStr = itoa(i);
-
-//    std::string s = std::to_string(i);
-//    ui->updateText->setText(QString::fromStdString(s));
-//    //TagOptimization t(i);
-//    cout << i << endl;
-//    i++;
 }
 
 
@@ -479,32 +457,6 @@ void MainWindow::on_checkBox_clicked()
         cout << "Crosshair Enabled." << endl;
     }
 }
-
-//void MainWindow::on_checkBox_2_clicked()
-//{
-//    if (data){
-//
-//            QStringList strList;
-//            strList << "one" << "two" << "three";
-
-//            QtCSV::StringData strData;
-//            strData.addRow(strList);
-//            strData.addEmptyRow();
-//            strData << strList << "this is the last row";
-
-//            // write to file
-//            QString filePath = QDir::currentPath() + "/test.csv";
-//            QtCSV::Writer::write(filePath, strData);
-//
-
-//        data = false;
-//        cout << "Crosshair Disabled." << endl;
-//    }
-//    else{
-//        data = true;
-//        cout << "Crosshair Enabled." << endl;
-//    }
-//}
 
 void openCSV(string TOD, string optimizedheader) {
     //QDir().mkdir("Data");
@@ -521,7 +473,6 @@ void MainWindow::on_checkBox_data_clicked()
         TOD = to_string(tm.tm_mon + 1) + "-"
             + to_string(tm.tm_mday) + "-" + to_string(tm.tm_year + 1900) + "-" + to_string(tm.tm_hour)
             + "_" + to_string(tm.tm_min) + "_" + to_string(tm.tm_sec);
-        //cout<< TOD << endl;
 
         optimizedheader = "Time,X,Y,Pitch,Roll,Yaw,Velx,Vely,Velmag,Veltheta\n";
         openCSV(TOD, optimizedheader);
@@ -533,9 +484,3 @@ void MainWindow::on_checkBox_data_clicked()
         data = true;
     }
 }
-
-
-
-
-
-
