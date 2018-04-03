@@ -353,8 +353,8 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
     }
     //line(image, Point(image.cols / 2, (image.rows / 2) - 50), Point(image.cols / 2, (image.rows/2)+50), Scalar(255, 255, 5), 1);
     if (crosshair){
-    line(image, Point((frame.cols / 2) - 50, frame.rows / 2), Point((frame.cols / 2) + 50, frame.rows / 2), Scalar(0, 0, 255), 3);
-    line(image, Point(frame.cols / 2, (frame.rows / 2) - 50), Point(frame.cols / 2, (frame.rows / 2) + 50), Scalar(0, 0, 255), 3);
+    line(image, Point((frame.cols / 2) - 50, frame.rows / 2), Point((frame.cols / 2) + 50, frame.rows / 2), Scalar(255, 0, 0), 2);
+    line(image, Point(frame.cols / 2, (frame.rows / 2) - 50), Point(frame.cols / 2, (frame.rows / 2) + 50), Scalar(255, 0, 0), 2);
     }
 
     qt_image = QImage((const unsigned char*) (image.data), image.cols, image.rows, QImage::Format_RGB888);
