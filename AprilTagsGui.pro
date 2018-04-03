@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = AprilTagsGui
 TEMPLATE = app
@@ -37,7 +37,8 @@ SOURCES += src/mainwindow.cpp\
             src/TagDetection.cc \
             src/TagDetector.cc \
             src/TagFamily.cc \
-            src/UnionFindSimple.cc
+            src/UnionFindSimple.cc \
+    qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
             AprilTags/Edge.h \
@@ -64,6 +65,7 @@ HEADERS  += mainwindow.h \
             AprilTags/TagFamily.h \
             AprilTags/UnionFindSimple.h \
             AprilTags/XYWeight.h \
+            qcustomplot.h
 
 
 
