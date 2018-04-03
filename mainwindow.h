@@ -102,12 +102,19 @@ private slots:
 
     void print_detection(AprilTags::TagDetection& detection);
 
-    void on_checkBox_clicked();
+    void on_checkBox_crosshair_clicked();
 
     void on_checkBox_data_clicked();
 
+    void on_checkBox_plot_clicked();
+
+    void plot();
+
+
 private:
     Ui::MainWindow *ui;
+
+    QVector<double> qv_x, qv_y;
 
     QTimer *timer;
     //VideoCapture cap;
@@ -117,9 +124,12 @@ private:
 
     bool crosshair=false;
     bool data=true; //record data on/off
+    bool m_plot=false; //plot data on/off
     bool m_click = true;  //turn webcam on/off with one button
     bool m_april = true;  //turn apriltags on/off with one button
+
     int i;
 };
 
 #endif // MAINWINDOW_H
+
