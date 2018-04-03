@@ -115,6 +115,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->plot->addGraph();
+    ui->plot->graph(0)->setPen(QColor(50,50,50,255));
+    ui->plot->xAxis->setRange(-0.5,0.5);
+    ui->plot->yAxis->setRange(-0.5,0.5);
+    ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
+    ui->plot->graph(0)->setLineStyle(QCPGraph::lsNone); //no line connecting points
+
     timer = new QTimer(this);
 }
 
@@ -321,6 +328,7 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
                                                    + " \nYaw: " + to_string_with_precision(OPTIMIZED_YAW) +" \nVel Mag: " + to_string_with_precision(velmag)+
                                                    " \nVel Angle: " + to_string_with_precision(veltheta)));
 
+      //for data recording
       optimizedData << std::fixed << std::setprecision(3) <<
                   (clock() - start_s) / (double(CLOCKS_PER_SEC)) << ","
                   << OPTIMIZED_X << ","
@@ -333,6 +341,15 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
                   << velmag << ","
                   << veltheta << ","
                  << endl;
+
+      //for plotting data
+      if(m_plot)
+      {
+              qv_x.append(OPTIMIZED_X);
+              qv_y.append(OPTIMIZED_Y);
+
+              plot();
+      }
 
     }
 
@@ -351,7 +368,7 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
       // also highlight in the image
       detections[i].draw(image);
     }
-    //line(image, Point(image.cols / 2, (image.rows / 2) - 50), Point(image.cols / 2, (image.rows/2)+50), Scalar(255, 255, 5), 1);
+
     if (crosshair){
     line(image, Point((frame.cols / 2) - 50, frame.rows / 2), Point((frame.cols / 2) + 50, frame.rows / 2), Scalar(255, 0, 0), 2);
     line(image, Point(frame.cols / 2, (frame.rows / 2) - 50), Point(frame.cols / 2, (frame.rows / 2) + 50), Scalar(255, 0, 0), 2);
@@ -362,6 +379,7 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
     ui->label->setPixmap(QPixmap::fromImage(qt_image));
 
     ui->label->resize(ui->label->pixmap()->size());
+
 
   }
 
@@ -442,11 +460,10 @@ void MainWindow::update_window2()
     ui->label->setPixmap(QPixmap::fromImage(qt_image));
 
     ui->label->resize(ui->label->pixmap()->size());
-
 }
 
 
-void MainWindow::on_checkBox_clicked()
+void MainWindow::on_checkBox_crosshair_clicked()
 {
     if (crosshair){
         crosshair = false;
@@ -457,6 +474,7 @@ void MainWindow::on_checkBox_clicked()
         cout << "Crosshair Enabled." << endl;
     }
 }
+
 
 void openCSV(string TOD, string optimizedheader) {
     //QDir().mkdir("Data");
@@ -473,6 +491,7 @@ void MainWindow::on_checkBox_data_clicked()
         TOD = to_string(tm.tm_mon + 1) + "-"
             + to_string(tm.tm_mday) + "-" + to_string(tm.tm_year + 1900) + "-" + to_string(tm.tm_hour)
             + "_" + to_string(tm.tm_min) + "_" + to_string(tm.tm_sec);
+        //cout<< TOD << endl;
 
         optimizedheader = "Time,X,Y,Pitch,Roll,Yaw,Velx,Vely,Velmag,Veltheta\n";
         openCSV(TOD, optimizedheader);
@@ -484,3 +503,39 @@ void MainWindow::on_checkBox_data_clicked()
         data = true;
     }
 }
+
+
+void MainWindow::on_checkBox_plot_clicked()
+{
+    if (m_plot){
+//        for(int i=0; i<=10; i++)
+//        {
+//            qv_x.append(i+0.5);
+//            qv_y.append(i+0.5);
+//        }
+//        plot();
+
+       // plot();
+        cout << "Plotting Enabled." << endl;
+        m_plot = false;
+    }
+    else{
+        qv_x.clear();
+        qv_y.clear();
+        plot();
+
+        cout << "Plotting Disabled." << endl;
+        m_plot = true;
+    }
+}
+
+//For Plotting Data
+
+void MainWindow::plot()
+{
+    ui->plot->graph(0)->setData(qv_x,qv_y);
+    ui->plot->replot();
+    ui->plot->update();
+
+}
+
