@@ -110,6 +110,8 @@ private slots:
 
     void plot();
 
+    void centerAndResize();
+
 
 private:
     Ui::MainWindow *ui;
@@ -132,4 +134,3 @@ private:
 };
 
 #endif // MAINWINDOW_H
-
