@@ -115,12 +115,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    centerAndResize();
+
     ui->plot->addGraph();
-    ui->plot->graph(0)->setPen(QColor(50,50,50,255));
     ui->plot->xAxis->setRange(-0.5,0.5);
     ui->plot->yAxis->setRange(-0.5,0.5);
+    ui->plot->xAxis->setLabel("X Location");
+    ui->plot->yAxis->setLabel("Y Location");
+    ui->plot->xAxis2-> setVisible(true);
+    ui->plot->yAxis2-> setVisible(true);
+    ui->plot->xAxis2-> setTicks(false);
+    ui->plot->yAxis2-> setTicks(false);
     ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
-    ui->plot->graph(0)->setLineStyle(QCPGraph::lsNone); //no line connecting points
+    ui->plot->graph(0)->setLineStyle(QCPGraph::lsLine); //no line connecting points: lsNone
+    ui->plot->graph(0)->setPen(QColor(50,50,50,255));
 
     timer = new QTimer(this);
 }
@@ -132,6 +140,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_Apriltags_clicked()
 {
+
     if(m_april){
     m_tagDetector = new AprilTags::TagDetector(AprilTags::tagCodes36h11);
        cap.open(0);
@@ -169,6 +178,10 @@ void MainWindow::on_pushButton_Apriltags_clicked()
 
 void MainWindow::on_pushButton_Webcam_clicked()
 {
+//    if(m_plot)
+//    {
+//        m_plot=false;
+//    }
     if (m_click){
         cap.open(0);
 
@@ -538,4 +551,27 @@ void MainWindow::plot()
     ui->plot->update();
 
 }
+
+void MainWindow::centerAndResize() {
+    // get the dimension available on this screen
+    QSize availableSize = qApp->desktop()->availableGeometry().size();
+    int width = availableSize.width();
+    int height = availableSize.height();
+    qDebug() << "Available dimensions " << width << "x" << height;
+    width *= 0.9; // 90% of the screen size
+    height *= 0.9; // 90% of the screen size
+    qDebug() << "Computed dimensions " << width << "x" << height;
+    QSize newSize( width, height );
+
+    setGeometry(
+        QStyle::alignedRect(
+            Qt::LeftToRight,
+            Qt::AlignCenter,
+            newSize,
+            qApp->desktop()->availableGeometry()
+        )
+    );
+}
+
+
 
