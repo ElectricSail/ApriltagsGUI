@@ -108,13 +108,13 @@ ostream& operator<<(ostream& os, const TagOptimization& t)
 }
 
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    createMenu();
     centerAndResize();
 
     ui->plot->addGraph();
@@ -178,10 +178,6 @@ void MainWindow::on_pushButton_Apriltags_clicked()
 
 void MainWindow::on_pushButton_Webcam_clicked()
 {
-//    if(m_plot)
-//    {
-//        m_plot=false;
-//    }
     if (m_click){
         cap.open(0);
 
@@ -217,7 +213,6 @@ void MainWindow::on_pushButton_Webcam_clicked()
     }
 }
 
-
 void MainWindow::loop() {
 
   cv::Mat image = frame;
@@ -241,7 +236,6 @@ void MainWindow::loop() {
     }
 
 }
-
 
 //For setting precision with strings
 template <class T>
@@ -388,16 +382,11 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
     }
 
     qt_image = QImage((const unsigned char*) (image.data), image.cols, image.rows, QImage::Format_RGB888);
-
     ui->label->setPixmap(QPixmap::fromImage(qt_image));
-
     ui->label->resize(ui->label->pixmap()->size());
-
-
   }
 
 }
-
 
 void MainWindow::print_detection(AprilTags::TagDetection& detection) {
     cout << "  Id: " << detection.id
@@ -443,7 +432,6 @@ void MainWindow::print_detection(AprilTags::TagDetection& detection) {
     // this relative pose is very non-Gaussian; see iSAM source code
     // for suitable factors.
 
-
     //TagOptimization(TIME, TAGID, X, Y, PITCH, ROLL, YAW)
     TagOptimization t(0, detection.id, translation(1)*1,
                 translation(2), pitch, roll, yaw);
@@ -475,7 +463,6 @@ void MainWindow::update_window2()
     ui->label->resize(ui->label->pixmap()->size());
 }
 
-
 void MainWindow::on_checkBox_crosshair_clicked()
 {
     if (crosshair){
@@ -487,7 +474,6 @@ void MainWindow::on_checkBox_crosshair_clicked()
         cout << "Crosshair Enabled." << endl;
     }
 }
-
 
 void openCSV(string TOD, string optimizedheader) {
     //QDir().mkdir("Data");
@@ -504,7 +490,6 @@ void MainWindow::on_checkBox_data_clicked()
         TOD = to_string(tm.tm_mon + 1) + "-"
             + to_string(tm.tm_mday) + "-" + to_string(tm.tm_year + 1900) + "-" + to_string(tm.tm_hour)
             + "_" + to_string(tm.tm_min) + "_" + to_string(tm.tm_sec);
-        //cout<< TOD << endl;
 
         optimizedheader = "Time,X,Y,Pitch,Roll,Yaw,Velx,Vely,Velmag,Veltheta\n";
         openCSV(TOD, optimizedheader);
@@ -517,18 +502,9 @@ void MainWindow::on_checkBox_data_clicked()
     }
 }
 
-
 void MainWindow::on_checkBox_plot_clicked()
 {
     if (m_plot){
-//        for(int i=0; i<=10; i++)
-//        {
-//            qv_x.append(i+0.5);
-//            qv_y.append(i+0.5);
-//        }
-//        plot();
-
-       // plot();
         cout << "Plotting Enabled." << endl;
         m_plot = false;
     }
@@ -543,7 +519,6 @@ void MainWindow::on_checkBox_plot_clicked()
 }
 
 //For Plotting Data
-
 void MainWindow::plot()
 {
     ui->plot->graph(0)->setData(qv_x,qv_y);
@@ -573,5 +548,16 @@ void MainWindow::centerAndResize() {
     );
 }
 
+//make exit command on toolbar
+void MainWindow::createMenu()
+{
+    menuBar = new QMenuBar;
+    fileMenu = new QMenu(tr("&File"), this);
 
+    exitAction = fileMenu->addAction(tr("E&xit"));
+    ui->menuBar->addMenu(fileMenu);
+    //QString styleSheet = "menuBar{background-color:#1d1d1d};";
+    //ui->menuBar->setStyleSheet(styleSheet);
 
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+}
