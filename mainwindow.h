@@ -1,6 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDialog>
+#include <QtWidgets>
+
+QT_BEGIN_NAMESPACE
+class QAction;
+class QMenuBar;
+
 #include <QMainWindow>
 #include <QTimer>
 #include <opencv2/opencv.hpp>
@@ -112,9 +119,15 @@ private slots:
 
     void centerAndResize();
 
+    void createMenu();
 
 private:
     Ui::MainWindow *ui;
+
+    QMenu *fileMenu;
+    QMenuBar *menuBar;
+    QAction *exitAction;
+    QAction *exitAct;
 
     QVector<double> qv_x, qv_y;
 
