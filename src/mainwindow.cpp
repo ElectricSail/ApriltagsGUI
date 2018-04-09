@@ -8,8 +8,11 @@
 #include <sys/time.h>
 #include <vector>
 #include <iomanip>
+#include <cstdio>
+#include <stdio.h>
 
 std::ofstream optimizedData;
+std::ofstream plotData;
 
 using namespace cv;
 
@@ -127,7 +130,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->plot->xAxis2-> setTicks(false);
     ui->plot->yAxis2-> setTicks(false);
     ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
-    ui->plot->graph(0)->setLineStyle(QCPGraph::lsLine); //no line connecting points: lsNone
+    ui->plot->graph(0)->setLineStyle(QCPGraph::lsNone); //no line connecting points: lsNone
     ui->plot->graph(0)->setPen(QColor(50,50,50,255));
 
     timer = new QTimer(this);
@@ -336,6 +339,7 @@ void MainWindow::processImage(cv::Mat& image, cv::Mat& image_gray) {
                                                    " \nVel Angle: " + to_string_with_precision(veltheta)));
 
       //for data recording
+
       optimizedData << std::fixed << std::setprecision(3) <<
                   (clock() - start_s) / (double(CLOCKS_PER_SEC)) << ","
                   << OPTIMIZED_X << ","
@@ -477,13 +481,14 @@ void MainWindow::on_checkBox_crosshair_clicked()
 
 void openCSV(string TOD, string optimizedheader) {
     //QDir().mkdir("Data");
-    optimizedData.open(TOD + "_OptimizedData.csv");
+    optimizedData.open("Data/"+TOD + "_OptimizedData.csv");
     optimizedData << optimizedheader;
 }
 
 void MainWindow::on_checkBox_data_clicked()
 {
     if(data){
+        ui-> checkBox_data -> setText("Record Data - ON");
         cout << "Data recording enabled." << endl;
         time_t t = time(NULL);
         struct tm tm = *localtime(&t);
@@ -497,22 +502,38 @@ void MainWindow::on_checkBox_data_clicked()
         data = false;
     }
     else{
+        ui-> checkBox_data -> setText("Record Data - OFF");
+        optimizedData.close();
         cout << "Data recording disabled." << endl;
         data = true;
     }
 }
 
+void openPlot(string TOD) {
+    //QDir().mkdir("Data");
+    plotData.open("Plot/" + TOD + "_plotData.png");
+}
+
 void MainWindow::on_checkBox_plot_clicked()
 {
     if (m_plot){
+        ui-> checkBox_plot -> setText("Plot Data - OFF");
         cout << "Plotting Enabled." << endl;
+        time_t t = time(NULL);
+        struct tm tm = *localtime(&t);
+        string TOD = to_string(tm.tm_mon + 1) + "-"
+            + to_string(tm.tm_mday) + "-" + to_string(tm.tm_year + 1900) + "-" + to_string(tm.tm_hour)
+            + "_" + to_string(tm.tm_min) + "_" + to_string(tm.tm_sec);
+
+        ui->plot->grab().save(QString::fromStdString("Plot/"+TOD+"_Plot.png"));
         m_plot = false;
     }
     else{
+        ui-> checkBox_plot -> setText("Plot Data - ON");
         qv_x.clear();
         qv_y.clear();
         plot();
-
+        //ui(string myLabel = new QLabel("Plot Data - OFF"));
         cout << "Plotting Disabled." << endl;
         m_plot = true;
     }
@@ -555,9 +576,12 @@ void MainWindow::createMenu()
     fileMenu = new QMenu(tr("&File"), this);
 
     exitAction = fileMenu->addAction(tr("E&xit"));
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+
     ui->menuBar->addMenu(fileMenu);
     //QString styleSheet = "menuBar{background-color:#1d1d1d};";
     //ui->menuBar->setStyleSheet(styleSheet);
 
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 }
+
+
