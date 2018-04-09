@@ -194,10 +194,7 @@ width:20px;
      </spacer>
     </item>
     <item row="4" column="0" rowspan="4">
-     <widget class="QCustomPlot" name="plot" native="true">
-      <zorder>checkBox_crosshair</zorder>
-      <zorder>verticalLayoutWidget</zorder>
-     </widget>
+     <widget class="QCustomPlot" name="plot" native="true"/>
     </item>
     <item row="8" column="0">
      <widget class="QLabel" name="label_2">
@@ -285,16 +282,6 @@ font: 7pt &quot;Sans Serif&quot;;</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QCheckBox" name="checkBox_data">
-        <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
-        </property>
-        <property name="text">
-         <string>Data Recording</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="2">
        <widget class="QCheckBox" name="checkBox_plot">
         <property name="styleSheet">
@@ -302,6 +289,16 @@ font: 7pt &quot;Sans Serif&quot;;</string>
         </property>
         <property name="text">
          <string>Plot Data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="checkBox_data">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string>Data Recording</string>
         </property>
        </widget>
       </item>
