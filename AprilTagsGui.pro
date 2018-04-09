@@ -1,15 +1,11 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2017-02-26T14:13:24
-#
-#-------------------------------------------------
-
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = AprilTagsGui
 TEMPLATE = app
+
+ICON = APRILTAGS.icns
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -72,16 +68,17 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 #SUBDIRS += Data
-#mytarget.commands += $${QMAKE_MKDIR} $$shell_path($${OUT_PWD}/foo)
 
+LIBS += -L/usr/local/lib
+QT_CONFIG -= no-pkg-config
+CONFIG  += link_pkgconfig
+PKGCONFIG += opencv eigen3
 
-#INCLUDEPATH += G:\\opencv\\build\\include \
-
-!contains(QT_CONFIG, no-pkg-config) {
-    CONFIG += link_pkgconfig
-    PKGCONFIG += opencv eigen3
-} else {
-    LIBS += -lopencv_core -lopencv_imgproc -lopencv_objdetect
-}
+#!contains(QT_CONFIG, no-pkg-config) {
+#    CONFIG += link_pkgconfig
+#    PKGCONFIG += opencv eigen3
+#} else {
+#    LIBS += -lopencv_core -lopencv_imgproc -lopencv_objdetect
+#}
 
 DISTFILES +=
